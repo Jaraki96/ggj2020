@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Boat : MonoBehaviour {
-    public float health;
+    public float health = 100;
     // Start is called before the first frame update
     void Start() {
 
