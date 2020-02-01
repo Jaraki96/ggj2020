@@ -3,38 +3,42 @@ using UnityEngine;
 
 public class KeyState : MonoBehaviour {
     private const int TIMEOUT_DAMAGE = 5;
-    [SerializeField]
-    public struct KeyEvent {
+    [System.Serializable]
+    public class KeyEvent {
         public KeyCode keyCode;
         public float lifetime;
         public float timeout;
     }
-    [SerializeField]
-    public struct KeySequence {
+    [System.Serializable]
+    public class KeySequence {
         public List<KeyEvent> keyEvents;
         public int currentIndex;
     }
-    [SerializeField]
-    public List<KeyEvent> pressedKeys = new List<KeyEvent>();
-    [SerializeField]
-    public List<KeyEvent> repeatKeys = new List<KeyEvent>();
-    [SerializeField]
-    public List<KeySequence> keySequences = new List<KeySequence>();
+    private List<KeyEvent> pressedKeys;
+    private List<KeyEvent> repeatKeys;
+    private List<KeySequence> keySequences;
+    public string repeatKeyString;
+    public string pressedKeyString;
     // Start is called before the first frame update
     void Start() {
-
+        pressedKeys = new List<KeyEvent>();
+        repeatKeys = new List<KeyEvent>();
+        keySequences = new List<KeySequence>();
     }
 
     // Update is called once per frame
     void Update() {
+        float time = Time.deltaTime;
+        repeatKeyString = "";
+        pressedKeyString = "";
         for(int i = 0; i < pressedKeys.Count; ++i) {
             KeyEvent keyEvent = pressedKeys[i];
+            pressedKeyString = keyEvent.keyCode + ", ";
             if (Input.GetKey(keyEvent.keyCode)) {
-                keyEvent.lifetime -= Time.deltaTime;
-                Debug.Log(keyEvent.lifetime);
+                keyEvent.lifetime -= time;
             } else {
-                keyEvent.timeout -= Time.deltaTime;
-                GameManager.instance.boat.health -= Time.deltaTime;
+                keyEvent.timeout -= time;
+                GameManager.instance.boat.health -= time;
                 if(keyEvent.timeout <= 0) {
                     GameManager.instance.boat.health -= TIMEOUT_DAMAGE;
                 }
@@ -46,11 +50,13 @@ public class KeyState : MonoBehaviour {
         }
         for (int i = 0; i < repeatKeys.Count; ++i) {
             KeyEvent keyEvent = repeatKeys[i];
+            repeatKeyString += keyEvent.keyCode + ", ";
             if (Input.GetKeyDown(keyEvent.keyCode)) {
                 keyEvent.lifetime -= 1;
+                Debug.Log(keyEvent.lifetime);
             } else {
-                keyEvent.timeout -= Time.deltaTime;
-                GameManager.instance.boat.health -= Time.deltaTime;
+                keyEvent.timeout -= time;
+                GameManager.instance.boat.health -= time;
                 if (keyEvent.timeout <= 0) {
                     GameManager.instance.boat.health -= TIMEOUT_DAMAGE;
                 }
@@ -66,8 +72,8 @@ public class KeyState : MonoBehaviour {
             if (Input.GetKeyDown(keyEvent.keyCode)) {
                 keySequence.currentIndex++;
             } else {
-                keyEvent.timeout -= Time.deltaTime;
-                GameManager.instance.boat.health -= Time.deltaTime;
+                keyEvent.timeout -= time;
+                GameManager.instance.boat.health -= time;
                 if (keyEvent.timeout <= 0) {
                     GameManager.instance.boat.health -= TIMEOUT_DAMAGE;
                 }
@@ -77,6 +83,9 @@ public class KeyState : MonoBehaviour {
                 KeyManager.instance.RemoveKey(keyEvent.keyCode);
             }
         }
+    }
+
+    private void LateUpdate() {
         // remove all dead key events
         pressedKeys.RemoveAll(keyEvent => keyEvent.lifetime <= 0 || keyEvent.timeout <= 0);
         repeatKeys.RemoveAll(keyEvent => keyEvent.lifetime <= 0 || keyEvent.timeout <= 0);
