@@ -64,7 +64,7 @@ public class KeyManager : MonoBehaviour {
             return row + ", " + column;
         }
     }
-    private Dictionary<Location, KeyCode> keys = new Dictionary<Location, KeyCode>();
+    public Dictionary<Location, KeyCode> keys = new Dictionary<Location, KeyCode>();
     private HashSet<KeyCode> selectedKeys = new HashSet<KeyCode>();
     // Start is called before the first frame update
     void Start() {
@@ -79,70 +79,87 @@ public class KeyManager : MonoBehaviour {
     }
 
     public KeyCode getRandomKeyByRow(int selectedRow) {
-        Location location = new Location {
-            row = selectedRow,
-            column = Random.Range(0, COLUMNS)
-        };
-        return keys[location];
+        Location location = new Location();
+        int count = 0;
+        while (selectedKeys.Contains(keys[location]) && count <= COLUMNS) {
+            location = new Location {
+                row = selectedRow,
+                column = Random.Range(0, COLUMNS)
+            };
+            count++;
+        }
+
+        return SelectKey(location);
     }
 
     public KeyCode getRandomKeyByColumn(int selectedColumn) {
-        Location location = new Location {
-            row = Random.Range(0, ROWS),
-            column = selectedColumn
-        };
-        return keys[location];
+        Location location = new Location();
+        int count = 0;
+        while (selectedKeys.Contains(keys[location]) && count <= ROWS) {
+            location = new Location {
+                row = Random.Range(0, ROWS),
+                column = selectedColumn
+            };
+            count++;
+        }
+        return SelectKey(location);
     }
 
     public KeyCode getRandomKeyByQuadrant(Quadrant quadrant) {
-        Location location = new Location {
-            row = Random.Range(0, ROWS),
-            column = Random.Range(0, COLUMNS)
-        };
-        switch (quadrant) {
-            case Quadrant.TOP_LEFT:
-                location = new Location {
-                    row = Random.Range(0, ROWS / 2),
-                    column = Random.Range(0, COLUMNS / 2)
-                };
-                break;
-            case Quadrant.TOP_RIGHT:
-                location = new Location {
-                    row = Random.Range(0, ROWS / 2),
-                    column = Random.Range(COLUMNS / 2, COLUMNS)
-                };
-                break;
-            case Quadrant.BOTTOM_LEFT:
-                location = new Location {
-                    row = Random.Range(ROWS / 2, ROWS),
-                    column = Random.Range(0, COLUMNS / 2)
-                };
-                break;
-            case Quadrant.BOTTOM_RIGHT:
-                location = new Location {
-                    row = Random.Range(ROWS / 2, ROWS),
-                    column = Random.Range(COLUMNS / 2, COLUMNS)
-                };
-                break;
+        Location location = new Location();
+        int count = 0;
+        while (selectedKeys.Contains(keys[location]) && count <= ROWS / 2 * COLUMNS / 2) {
+            switch (quadrant) {
+                case Quadrant.TOP_LEFT:
+                    location = new Location {
+                        row = Random.Range(0, ROWS / 2),
+                        column = Random.Range(0, COLUMNS / 2)
+                    };
+                    break;
+                case Quadrant.TOP_RIGHT:
+                    location = new Location {
+                        row = Random.Range(0, ROWS / 2),
+                        column = Random.Range(COLUMNS / 2, COLUMNS)
+                    };
+                    break;
+                case Quadrant.BOTTOM_LEFT:
+                    location = new Location {
+                        row = Random.Range(ROWS / 2, ROWS),
+                        column = Random.Range(0, COLUMNS / 2)
+                    };
+                    break;
+                case Quadrant.BOTTOM_RIGHT:
+                    location = new Location {
+                        row = Random.Range(ROWS / 2, ROWS),
+                        column = Random.Range(COLUMNS / 2, COLUMNS)
+                    };
+                    break;
+            }
+            count++;
         }
-        return keys[location];
+        return SelectKey(location);
     }
 
     public KeyCode getRandomKey() {
-        Location location = new Location {
-            row = Random.Range(0, ROWS),
-            column = Random.Range(0, COLUMNS)
-        };
-        return keys[location];
+        Location location = new Location();
+        int count = 0;
+        while (selectedKeys.Contains(keys[location]) && count <= COLUMNS * ROWS) {
+            location = new Location {
+                row = Random.Range(0, ROWS),
+                column = Random.Range(0, COLUMNS)
+            };
+            count++;
+        }
+        return SelectKey(location);
     }
 
-    public KeyCode selectKey(Location location) {
+    public KeyCode SelectKey(Location location) {
         KeyCode keyCode = keys[location];
         selectedKeys.Add(keyCode);
         return keyCode;
     }
 
-    public void removeKey(KeyCode keyCode) {
+    public void RemoveKey(KeyCode keyCode) {
         selectedKeys.Remove(keyCode);
     }
 

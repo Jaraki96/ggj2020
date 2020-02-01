@@ -1,10 +1,12 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Player : MonoBehaviour {
     [SerializeField]
     public KeyState keyState;
+    public Text text;
     // Start is called before the first frame update
     void Start() {
 
@@ -12,6 +14,10 @@ public class Player : MonoBehaviour {
 
     // Update is called once per frame
     void Update() {
-
+        string s = "";
+        foreach(KeyState.KeyEvent keyEvent in keyState.pressedKeys) {
+            s += keyEvent.keyCode + ", ";
+        }
+        text.text = s;
     }
 }

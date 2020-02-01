@@ -3,6 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour {
+    public static GameManager instance;
+    public enum State {
+        IN_PROGRESS,
+        PAUSED,
+        WIN,
+        LOSS
+    }
     [SerializeField]
     public Player player1;
     [SerializeField]
@@ -11,25 +18,33 @@ public class GameManager : MonoBehaviour {
     public Boat boat;
     public float timeLimit = 40;
     public float timer;
+    
     // Start is called before the first frame update
     void Start() {
-
+        instance = this;
     }
 
     // Update is called once per frame
     void Update() {
         timer += Time.deltaTime;
-        if(getWinner() != null) {
+        State state = getState();
+        if(state != State.IN_PROGRESS || state != State.PAUSED) {
             // game is over
+            if(state == State.WIN) {
+                // win
+            } else {
+                // loss
+            }
+
         }
     }
 
-    private Player getWinner() {
+    private State getState() {
         if(boat.health <= 0) {
-            return player2;
+            return State.LOSS;
         } else if (timer >= timeLimit){
-            return player1;
+            return State.WIN;
         }
-        return null;
+        return State.IN_PROGRESS;
     }
 }
