@@ -6,6 +6,10 @@ public class KeyManager : MonoBehaviour {
     private const int ROWS = 4;
     private const int COLUMNS = 10;
     public static KeyManager instance;
+    public struct KeyLocation {
+        public KeyCode keyCode;
+        public Location location;
+    }
     public enum Quadrant {
         TOP_LEFT,
         TOP_RIGHT,
@@ -78,10 +82,13 @@ public class KeyManager : MonoBehaviour {
         instance = this;
     }
 
-    public KeyCode getRandomKeyByRow(int selectedRow) {
-        Location location = new Location();
+    public KeyLocation GetRandomKeyByRow(int selectedRow) {
+        Location location = new Location {
+            row = -1,
+            column = -1
+        };
         int count = 0;
-        while (selectedKeys.Contains(keys[location]) && count <= COLUMNS) {
+        while (!keys.ContainsKey(location) || selectedKeys.Contains(keys[location]) && count <= COLUMNS) {
             location = new Location {
                 row = selectedRow,
                 column = Random.Range(0, COLUMNS)
@@ -92,10 +99,13 @@ public class KeyManager : MonoBehaviour {
         return SelectKey(location);
     }
 
-    public KeyCode getRandomKeyByColumn(int selectedColumn) {
-        Location location = new Location();
+    public KeyLocation GetRandomKeyByColumn(int selectedColumn) {
+        Location location = new Location {
+            row = -1,
+            column = -1
+        };
         int count = 0;
-        while (selectedKeys.Contains(keys[location]) && count <= ROWS) {
+        while (!keys.ContainsKey(location) || selectedKeys.Contains(keys[location]) && count <= ROWS) {
             location = new Location {
                 row = Random.Range(0, ROWS),
                 column = selectedColumn
@@ -105,10 +115,13 @@ public class KeyManager : MonoBehaviour {
         return SelectKey(location);
     }
 
-    public KeyCode getRandomKeyByQuadrant(Quadrant quadrant) {
-        Location location = new Location();
+    public KeyLocation GetRandomKeyByQuadrant(Quadrant quadrant) {
+        Location location = new Location {
+            row = -1,
+            column = -1
+        };
         int count = 0;
-        while (selectedKeys.Contains(keys[location]) && count <= ROWS / 2 * COLUMNS / 2) {
+        while (!keys.ContainsKey(location) || selectedKeys.Contains(keys[location]) && count <= ROWS / 2 * COLUMNS / 2) {
             switch (quadrant) {
                 case Quadrant.TOP_LEFT:
                     location = new Location {
@@ -140,10 +153,13 @@ public class KeyManager : MonoBehaviour {
         return SelectKey(location);
     }
 
-    public KeyCode getRandomKey() {
-        Location location = new Location();
+    public KeyLocation GetRandomKey() {
+        Location location = new Location {
+            row = -1,
+            column = -1
+        };
         int count = 0;
-        while (selectedKeys.Contains(keys[location]) && count <= COLUMNS * ROWS) {
+        while (!keys.ContainsKey(location) || selectedKeys.Contains(keys[location]) && count <= COLUMNS * ROWS) {
             location = new Location {
                 row = Random.Range(0, ROWS),
                 column = Random.Range(0, COLUMNS)
@@ -153,10 +169,29 @@ public class KeyManager : MonoBehaviour {
         return SelectKey(location);
     }
 
-    public KeyCode SelectKey(Location location) {
-        KeyCode keyCode = keys[location];
-        selectedKeys.Add(keyCode);
-        return keyCode;
+    public Quadrant GetQuadrant(Location location) {
+        if(location.row < ROWS / 2) {
+            if(location.column < COLUMNS / 2) {
+                return Quadrant.TOP_LEFT;
+            } else {
+                return Quadrant.TOP_RIGHT;
+            }
+        } else {
+            if (location.column < COLUMNS / 2) {
+                return Quadrant.BOTTOM_LEFT;
+            } else {
+                return Quadrant.BOTTOM_RIGHT;
+            }
+        }
+    }
+
+    public KeyLocation SelectKey(Location selectedLocation) {
+        KeyCode key = keys[selectedLocation];
+        selectedKeys.Add(key);
+        return new KeyLocation {
+            keyCode = key,
+            location = selectedLocation
+        };
     }
 
     public void RemoveKey(KeyCode keyCode) {
