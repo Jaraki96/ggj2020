@@ -3,10 +3,17 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class KeyManager : MonoBehaviour {
-    private const int rows = 4;
-    private const int columns = 10;
+    private const int ROWS = 4;
+    private const int COLUMNS = 10;
     public static KeyManager instance;
-    private KeyCode[] keyCodes = {
+    public enum Quadrant {
+        TOP_LEFT,
+        TOP_RIGHT,
+        BOTTOM_LEFT,
+        BOTTOM_RIGHT
+    }
+    [SerializeField]
+    public KeyCode[] keyCodes = {
         KeyCode.Alpha1,
         KeyCode.Alpha2,
         KeyCode.Alpha3,
@@ -48,23 +55,95 @@ public class KeyManager : MonoBehaviour {
         KeyCode.Period,
         KeyCode.Question,
     };
-    public struct Key {
-        public KeyCode keyCode;
+    [SerializeField]
+    public struct Location {
         public int row;
         public int column;
-    }
 
-    public HashSet<Key> keys = new HashSet<Key>();
+        public override string ToString() {
+            return row + ", " + column;
+        }
+    }
+    private Dictionary<Location, KeyCode> keys = new Dictionary<Location, KeyCode>();
+    private HashSet<KeyCode> selectedKeys = new HashSet<KeyCode>();
     // Start is called before the first frame update
     void Start() {
-        for (int i = 0; i < rows * columns; ++i) {
-            Key key = new Key();
-            key.row = i / columns;
-            key.column = i % columns;
-            key.keyCode = keyCodes[i];
-            keys.Add(key);
+        for (int i = 0; i < ROWS * COLUMNS; ++i) {
+            Location location = new Location {
+                row = i / COLUMNS,
+                column = i % COLUMNS,
+            };
+            keys.Add(location, keyCodes[i]);
         }
         instance = this;
+    }
+
+    public KeyCode getRandomKeyByRow(int selectedRow) {
+        Location location = new Location {
+            row = selectedRow,
+            column = Random.Range(0, COLUMNS)
+        };
+        return keys[location];
+    }
+
+    public KeyCode getRandomKeyByColumn(int selectedColumn) {
+        Location location = new Location {
+            row = Random.Range(0, ROWS),
+            column = selectedColumn
+        };
+        return keys[location];
+    }
+
+    public KeyCode getRandomKeyByQuadrant(Quadrant quadrant) {
+        Location location = new Location {
+            row = Random.Range(0, ROWS),
+            column = Random.Range(0, COLUMNS)
+        };
+        switch (quadrant) {
+            case Quadrant.TOP_LEFT:
+                location = new Location {
+                    row = Random.Range(0, ROWS / 2),
+                    column = Random.Range(0, COLUMNS / 2)
+                };
+                break;
+            case Quadrant.TOP_RIGHT:
+                location = new Location {
+                    row = Random.Range(0, ROWS / 2),
+                    column = Random.Range(COLUMNS / 2, COLUMNS)
+                };
+                break;
+            case Quadrant.BOTTOM_LEFT:
+                location = new Location {
+                    row = Random.Range(ROWS / 2, ROWS),
+                    column = Random.Range(0, COLUMNS / 2)
+                };
+                break;
+            case Quadrant.BOTTOM_RIGHT:
+                location = new Location {
+                    row = Random.Range(ROWS / 2, ROWS),
+                    column = Random.Range(COLUMNS / 2, COLUMNS)
+                };
+                break;
+        }
+        return keys[location];
+    }
+
+    public KeyCode getRandomKey() {
+        Location location = new Location {
+            row = Random.Range(0, ROWS),
+            column = Random.Range(0, COLUMNS)
+        };
+        return keys[location];
+    }
+
+    public KeyCode selectKey(Location location) {
+        KeyCode keyCode = keys[location];
+        selectedKeys.Add(keyCode);
+        return keyCode;
+    }
+
+    public void removeKey(KeyCode keyCode) {
+        selectedKeys.Remove(keyCode);
     }
 
     // Update is called once per frame
