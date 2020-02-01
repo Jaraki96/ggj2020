@@ -3,9 +3,13 @@ using UnityEngine;
 
 public class KeyState : MonoBehaviour {
     private const int TIMEOUT_DAMAGE = 5;
+    private const float HOLD_TIME = 10f;
+    private const float TIMEOUT = 3f;
+    private const int NUM_PRESSES = 5;
+    private const float PRESSED_PROBABILITY = 0.75f;
     [System.Serializable]
     public class KeyEvent {
-        public KeyCode keyCode;
+        public KeyManager.KeyLocation keyLocation;
         public float lifetime;
         public float timeout;
     }
@@ -33,8 +37,8 @@ public class KeyState : MonoBehaviour {
         pressedKeyString = "";
         for(int i = 0; i < pressedKeys.Count; ++i) {
             KeyEvent keyEvent = pressedKeys[i];
-            pressedKeyString = keyEvent.keyCode + ", ";
-            if (Input.GetKey(keyEvent.keyCode)) {
+            pressedKeyString = keyEvent.keyLocation.keyCode + ", ";
+            if (Input.GetKey(keyEvent.keyLocation.keyCode)) {
                 keyEvent.lifetime -= time;
             } else {
                 keyEvent.timeout -= time;
@@ -45,15 +49,14 @@ public class KeyState : MonoBehaviour {
             }
             if (keyEvent.lifetime <= 0 || keyEvent.timeout <= 0) {
                 // remove from KeyManager
-                KeyManager.instance.RemoveKey(keyEvent.keyCode);
+                KeyManager.instance.RemoveKey(keyEvent.keyLocation.keyCode);
             }
         }
         for (int i = 0; i < repeatKeys.Count; ++i) {
             KeyEvent keyEvent = repeatKeys[i];
-            repeatKeyString += keyEvent.keyCode + ", ";
-            if (Input.GetKeyDown(keyEvent.keyCode)) {
+            repeatKeyString += keyEvent.keyLocation.keyCode + ", ";
+            if (Input.GetKeyDown(keyEvent.keyLocation.keyCode)) {
                 keyEvent.lifetime -= 1;
-                Debug.Log(keyEvent.lifetime);
             } else {
                 keyEvent.timeout -= time;
                 GameManager.instance.boat.health -= time;
@@ -63,13 +66,13 @@ public class KeyState : MonoBehaviour {
             }
             if(keyEvent.lifetime <= 0 || keyEvent.timeout <= 0) {
                 // remove from KeyManager
-                KeyManager.instance.RemoveKey(keyEvent.keyCode);
+                KeyManager.instance.RemoveKey(keyEvent.keyLocation.keyCode);
             }
         }
         for (int i = 0; i < keySequences.Count; ++i) {
             KeySequence keySequence = keySequences[i];
             KeyEvent keyEvent = keySequence.keyEvents[keySequence.currentIndex];
-            if (Input.GetKeyDown(keyEvent.keyCode)) {
+            if (Input.GetKeyDown(keyEvent.keyLocation.keyCode)) {
                 keySequence.currentIndex++;
             } else {
                 keyEvent.timeout -= time;
@@ -80,7 +83,7 @@ public class KeyState : MonoBehaviour {
             }
             if (keySequence.currentIndex == keySequence.keyEvents.Count || keyEvent.timeout <= 0) {
                 // remove from KeyManager
-                KeyManager.instance.RemoveKey(keyEvent.keyCode);
+                KeyManager.instance.RemoveKey(keyEvent.keyLocation.keyCode);
             }
         }
     }
@@ -92,32 +95,85 @@ public class KeyState : MonoBehaviour {
         keySequences.RemoveAll(keySequence => keySequence.currentIndex == keySequence.keyEvents.Count || keySequence.keyEvents[keySequence.currentIndex].timeout <= 0);
     }
 
-    public void AddPressedKeyEvent(KeyCode key, float duration, float timeoutDuration) {
+    public void AddInterestingKeyEvent() {
+        List<KeyManager.Location> locations = new List<KeyManager.Location>();
+        foreach(KeyEvent keyEvent in pressedKeys) {
+            locations.Add(keyEvent.keyLocation.location);
+        }
+        foreach (KeyEvent keyEvent in repeatKeys) {
+            locations.Add(keyEvent.keyLocation.location);
+        }
+        if(locations.Count == 0) {
+            AddPressedKeyEvent(KeyManager.instance.GetRandomKey(), HOLD_TIME, TIMEOUT);
+        } else {
+            int topLeftCount = 0;
+            int topRightCount = 0;
+            int bottomLeftCount = 0;
+            int bottomRightCount = 0;
+            foreach(KeyManager.Location location in locations) {
+                switch (KeyManager.instance.GetQuadrant(location)) {
+                    case KeyManager.Quadrant.TOP_LEFT:
+                        topLeftCount++;
+                        break;
+                    case KeyManager.Quadrant.TOP_RIGHT:
+                        topRightCount++;
+                        break;
+                    case KeyManager.Quadrant.BOTTOM_LEFT:
+                        bottomLeftCount++;
+                        break;
+                    case KeyManager.Quadrant.BOTTOM_RIGHT:
+                        bottomRightCount++;
+                        break;
+                }
+            }
+            float probability = Random.Range(0f, 1f);
+            KeyManager.Quadrant quadrant = KeyManager.Quadrant.BOTTOM_RIGHT;
+            if(topLeftCount <= topRightCount && topLeftCount <= bottomLeftCount && topLeftCount <= bottomRightCount) {
+                // spawn in top left
+                quadrant = KeyManager.Quadrant.TOP_LEFT;
+            } else if (topRightCount <= topLeftCount && topRightCount <= bottomLeftCount && topRightCount <= bottomRightCount) {
+                // spawn in top right
+                quadrant = KeyManager.Quadrant.TOP_RIGHT;
+            } else if (bottomLeftCount <= topRightCount && bottomLeftCount <= topLeftCount && bottomLeftCount <= bottomRightCount) {
+                // spawn in bottom left
+                quadrant = KeyManager.Quadrant.BOTTOM_LEFT;
+            } else {
+                // spawn in bottom right
+            }
+            if (probability <= PRESSED_PROBABILITY) {
+                AddPressedKeyEvent(KeyManager.instance.GetRandomKeyByQuadrant(quadrant), HOLD_TIME, TIMEOUT);
+            } else {
+                AddRepeatKeyEvent(KeyManager.instance.GetRandomKeyByQuadrant(quadrant), NUM_PRESSES, TIMEOUT);
+            }
+        }
+    }
+
+    public void AddPressedKeyEvent(KeyManager.KeyLocation key, float duration, float timeoutDuration) {
         KeyEvent keyEvent = new KeyEvent {
-            keyCode = key,
+            keyLocation = key,
             lifetime = duration,
             timeout = timeoutDuration
         };
         pressedKeys.Add(keyEvent);
     }
 
-    public void AddRepeatKeyEvent(KeyCode key, int numPresses, float timeoutDuration) {
+    public void AddRepeatKeyEvent(KeyManager.KeyLocation key, int numPresses, float timeoutDuration) {
         KeyEvent keyEvent = new KeyEvent {
-            keyCode = key,
+            keyLocation = key,
             lifetime = numPresses,
             timeout = timeoutDuration
         };
         repeatKeys.Add(keyEvent);
     }
 
-    public void AddKeySequence(List<KeyCode> keys, float timeoutDuration) {
+    public void AddKeySequence(List<KeyManager.KeyLocation> keys, float timeoutDuration) {
         KeySequence keySequence = new KeySequence {
             keyEvents = new List<KeyEvent>(),
             currentIndex = 0,
         };
-        foreach(KeyCode keyCode in keys) {
+        foreach(KeyManager.KeyLocation key in keys) {
             KeyEvent keyEvent = new KeyEvent {
-                keyCode = keyCode,
+                keyLocation = key,
                 lifetime = timeoutDuration,
                 timeout = timeoutDuration
             };
