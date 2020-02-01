@@ -14,10 +14,7 @@ public class Player : MonoBehaviour {
 
     // Update is called once per frame
     void Update() {
-        string s = "";
-        foreach(KeyState.KeyEvent keyEvent in keyState.pressedKeys) {
-            s += keyEvent.keyCode + ", ";
-        }
-        text.text = s;
+        text.text = "Repeat: " + keyState.repeatKeyString + "\n" + 
+            "Hold: " + keyState.pressedKeyString;
     }
 }

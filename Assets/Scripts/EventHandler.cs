@@ -6,6 +6,7 @@ public class EventHandler : MonoBehaviour {
     private const int EVENT_TIMING = 5;
     private const float HOLD_TIME = 10f;
     private const float TIMEOUT = 3f;
+    private const int NUM_PRESSES = 5;
     public enum RandomKeyType {
         ROW,
         COLUMN,
@@ -42,17 +43,17 @@ public class EventHandler : MonoBehaviour {
                 case RandomKeyType.QUADRANT:
                     Debug.Log("Getting Random Key By Quadrant");
                     keyCode = KeyManager.instance.getRandomKeyByQuadrant(KeyManager.Quadrant.TOP_LEFT);
-                    GameManager.instance.player1.keyState.AddPressedKeyEvent(keyCode, HOLD_TIME, TIMEOUT);
+                    GameManager.instance.player1.keyState.AddRepeatKeyEvent(keyCode, NUM_PRESSES, TIMEOUT);
                     keyCode = KeyManager.instance.getRandomKeyByQuadrant(KeyManager.Quadrant.TOP_LEFT);
-                    GameManager.instance.player2.keyState.AddPressedKeyEvent(keyCode, HOLD_TIME, TIMEOUT);
+                    GameManager.instance.player2.keyState.AddRepeatKeyEvent(keyCode, NUM_PRESSES, TIMEOUT);
                     break;
                 case RandomKeyType.RANDOM:
                 default:
                     Debug.Log("Getting Random Key");
                     keyCode = KeyManager.instance.getRandomKey();
-                    GameManager.instance.player1.keyState.AddPressedKeyEvent(keyCode, HOLD_TIME, TIMEOUT);
+                    GameManager.instance.player1.keyState.AddRepeatKeyEvent(keyCode, NUM_PRESSES, TIMEOUT);
                     keyCode = KeyManager.instance.getRandomKey();
-                    GameManager.instance.player2.keyState.AddPressedKeyEvent(keyCode, HOLD_TIME, TIMEOUT);
+                    GameManager.instance.player2.keyState.AddRepeatKeyEvent(keyCode, NUM_PRESSES, TIMEOUT);
                     break;
             }
             Debug.Log(keyCode);
