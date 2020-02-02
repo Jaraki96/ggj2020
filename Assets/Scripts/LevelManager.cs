@@ -5,6 +5,16 @@ using UnityEngine.SceneManagement;
 
 public class LevelManager : MonoBehaviour
 {
+    private AudioManager audioManger;
+
+    void Start()
+    {
+        audioManger = AudioManager.instance;
+        if (audioManger == null)
+            Debug.LogError("No Audio Manager in this scene.");
+        audioManger.PlaySound("Title Music");
+    }
+
     public void LoadLevel(string name)
     {
         SceneManager.LoadScene(name);
