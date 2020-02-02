@@ -6,7 +6,7 @@ public class KeyState : MonoBehaviour {
     private const float HOLD_TIME = 10f;
     private const float TIMEOUT = 3f;
     private const int NUM_PRESSES = 5;
-    private const float PRESSED_PROBABILITY = 0.75f;
+    private const float PRESSED_PROBABILITY = 0.66f;
     private const float HEALING_SCALE = 3f;
     [System.Serializable]
     public class KeyEvent {
@@ -109,8 +109,13 @@ public class KeyState : MonoBehaviour {
         foreach (KeyEvent keyEvent in repeatKeys) {
             locations.Add(keyEvent.keyLocation.location);
         }
-        if(locations.Count == 0) {
-            AddPressedKeyEvent(KeyManager.instance.GetRandomKey(), HOLD_TIME, TIMEOUT);
+        float probability = Random.Range(0f, 1f);
+        if (locations.Count == 0) {
+            if (probability <= PRESSED_PROBABILITY) {
+                AddPressedKeyEvent(KeyManager.instance.GetRandomKey(), HOLD_TIME, TIMEOUT);
+            } else {
+                AddRepeatKeyEvent(KeyManager.instance.GetRandomKey(), NUM_PRESSES, TIMEOUT);
+            }
         } else {
             int topLeftCount = 0;
             int topRightCount = 0;
@@ -132,7 +137,6 @@ public class KeyState : MonoBehaviour {
                         break;
                 }
             }
-            float probability = Random.Range(0f, 1f);
             KeyManager.Quadrant quadrant = KeyManager.Quadrant.BOTTOM_RIGHT;
             if (topLeftCount <= topRightCount && topLeftCount <= bottomLeftCount && topLeftCount <= bottomRightCount) {
                 // spawn in top left

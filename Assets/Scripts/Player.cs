@@ -24,13 +24,17 @@ public class Player : MonoBehaviour {
             text.text = "";
         }
         foreach (char c in keyState.pressedKeyString) {
-            pressedKeysTexts[count].text = c.ToString();
-            count++;
+            if(count < keyState.pressedKeyString.Length) {
+                pressedKeysTexts[count].text = c.ToString();
+                count++;
+            }
         }
         count = 0;
         foreach (char c in keyState.repeatKeyString) {
-            repeatKeysTexts[count].text = c.ToString();
-            count++;
+            if(count < keyState.repeatKeyString.Length) {
+                repeatKeysTexts[count].text = c.ToString();
+                count++;
+            }
         }
     }
 }
