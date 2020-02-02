@@ -61,7 +61,7 @@ MonoBehaviour:
   - name: Healing
     clip: {fileID: 8300000, guid: 9b916931c2b23f444829a29c258bacc9, type: 3}
     source: {fileID: 0}
-    volume: 1
+    volume: 0.7
     pitch: 1
     randomVolume: 0
     randomPitch: 0
