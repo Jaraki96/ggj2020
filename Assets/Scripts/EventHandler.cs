@@ -12,8 +12,8 @@ public class EventHandler : MonoBehaviour {
 
     // Update is called once per frame
     void Update() {
-        if(timeSinceLastEvent >= EVENT_TIMING) {
-            // spawn key event
+        if(timeSinceLastEvent >= EVENT_TIMING && GameManager.instance.GetState() != GameManager.State.LOSS &&
+            GameManager.instance.GetState() != GameManager.State.WIN) {
             GameManager.instance.player1.keyState.AddInterestingKeyEvent();
             GameManager.instance.player2.keyState.AddInterestingKeyEvent();
             timeSinceLastEvent = 0;

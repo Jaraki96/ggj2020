@@ -7,6 +7,7 @@ public class KeyState : MonoBehaviour {
     private const float TIMEOUT = 3f;
     private const int NUM_PRESSES = 5;
     private const float PRESSED_PROBABILITY = 0.75f;
+    private const float HEALING_SCALE = 2f;
     [System.Serializable]
     public class KeyEvent {
         public KeyManager.KeyLocation keyLocation;
@@ -40,11 +41,12 @@ public class KeyState : MonoBehaviour {
             pressedKeyString = keyEvent.keyLocation.keyCode + ", ";
             if (Input.GetKey(keyEvent.keyLocation.keyCode)) {
                 keyEvent.lifetime -= time;
+                GameManager.instance.boat.health.TakeDamage(-time / HEALING_SCALE);
             } else {
                 keyEvent.timeout -= time;
-                GameManager.instance.boat.health -= time;
+                GameManager.instance.boat.health.TakeDamage(time);
                 if(keyEvent.timeout <= 0) {
-                    GameManager.instance.boat.health -= TIMEOUT_DAMAGE;
+                    GameManager.instance.boat.health.TakeDamage(TIMEOUT_DAMAGE);
                 }
             }
             if (keyEvent.lifetime <= 0 || keyEvent.timeout <= 0) {
@@ -57,11 +59,12 @@ public class KeyState : MonoBehaviour {
             repeatKeyString += keyEvent.keyLocation.keyCode + ", ";
             if (Input.GetKeyDown(keyEvent.keyLocation.keyCode)) {
                 keyEvent.lifetime -= 1;
+                GameManager.instance.boat.health.TakeDamage(1f / HEALING_SCALE);
             } else {
                 keyEvent.timeout -= time;
-                GameManager.instance.boat.health -= time;
+                GameManager.instance.boat.health.TakeDamage(time);
                 if (keyEvent.timeout <= 0) {
-                    GameManager.instance.boat.health -= TIMEOUT_DAMAGE;
+                    GameManager.instance.boat.health.TakeDamage(TIMEOUT_DAMAGE);
                 }
             }
             if(keyEvent.lifetime <= 0 || keyEvent.timeout <= 0) {
@@ -76,9 +79,9 @@ public class KeyState : MonoBehaviour {
                 keySequence.currentIndex++;
             } else {
                 keyEvent.timeout -= time;
-                GameManager.instance.boat.health -= time;
+                GameManager.instance.boat.health.TakeDamage(time);
                 if (keyEvent.timeout <= 0) {
-                    GameManager.instance.boat.health -= TIMEOUT_DAMAGE;
+                    GameManager.instance.boat.health.TakeDamage(TIMEOUT_DAMAGE);
                 }
             }
             if (keySequence.currentIndex == keySequence.keyEvents.Count || keyEvent.timeout <= 0) {
