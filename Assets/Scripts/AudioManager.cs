@@ -6,7 +6,7 @@ public class Sound
     public string name;
     public AudioClip clip;
 
-    private AudioSource source;
+    public AudioSource source;
 
     [Range(0.0f, 1.0f)]
     public float volume = 0.7f;
@@ -67,7 +67,9 @@ public class AudioManager : MonoBehaviour
         {
             if(soundName == sounds[i].name)
             {
-                sounds[i].Play();
+                if (!sounds[i].source.isPlaying) {
+                    sounds[i].Play();
+                }
                 return;
             }
         }

@@ -42,11 +42,13 @@ public class KeyState : MonoBehaviour {
             if (Input.GetKey(keyEvent.keyLocation.keyCode)) {
                 keyEvent.lifetime -= time;
                 GameManager.instance.boat.health.TakeDamage(-time / HEALING_SCALE);
+                AudioManager.instance.PlaySound("Healing");
             } else {
                 keyEvent.timeout -= time;
                 GameManager.instance.boat.health.TakeDamage(time);
                 if(keyEvent.timeout <= 0) {
                     GameManager.instance.boat.health.TakeDamage(TIMEOUT_DAMAGE);
+                    AudioManager.instance.PlaySound("Damage1");
                 }
             }
             if (keyEvent.lifetime <= 0 || keyEvent.timeout <= 0) {
@@ -60,11 +62,13 @@ public class KeyState : MonoBehaviour {
             if (Input.GetKeyDown(keyEvent.keyLocation.keyCode)) {
                 keyEvent.lifetime -= 1;
                 GameManager.instance.boat.health.TakeDamage(1f / HEALING_SCALE);
+                AudioManager.instance.PlaySound("Nailing");
             } else {
                 keyEvent.timeout -= time;
                 GameManager.instance.boat.health.TakeDamage(time);
                 if (keyEvent.timeout <= 0) {
                     GameManager.instance.boat.health.TakeDamage(TIMEOUT_DAMAGE);
+                    AudioManager.instance.PlaySound("Damage1");
                 }
             }
             if(keyEvent.lifetime <= 0 || keyEvent.timeout <= 0) {
@@ -82,6 +86,7 @@ public class KeyState : MonoBehaviour {
                 GameManager.instance.boat.health.TakeDamage(time);
                 if (keyEvent.timeout <= 0) {
                     GameManager.instance.boat.health.TakeDamage(TIMEOUT_DAMAGE);
+                    AudioManager.instance.PlaySound("Damage1");
                 }
             }
             if (keySequence.currentIndex == keySequence.keyEvents.Count || keyEvent.timeout <= 0) {
