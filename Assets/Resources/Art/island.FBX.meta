@@ -3,7 +3,22 @@ guid: e5df4de39f354cf44b25334f16896297
 ModelImporter:
   serializedVersion: 19300
   internalIDToNameTable: []
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: 16 - Default
+    second: {fileID: 2100000, guid: 02e845a558faada4498f905bbd9ae582, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: 22 - Default
+    second: {fileID: 2100000, guid: 687f5c9f8cf98854da266dbaa07dbbd6, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: palmfrond
+    second: {fileID: 2100000, guid: 6834164bccdf7e640924d1ad63219a85, type: 2}
   materials:
     materialImportMode: 1
     materialName: 0

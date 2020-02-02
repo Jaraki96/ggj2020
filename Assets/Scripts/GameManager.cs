@@ -28,6 +28,7 @@ public class GameManager : MonoBehaviour {
 
     // Update is called once per frame
     void Update() {
+        AudioManager.instance.PlaySound("Waves");
         timer += Time.deltaTime;
         State state = GetState();
         if(state != State.IN_PROGRESS && state != State.PAUSED) {
