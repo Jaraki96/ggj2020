@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Boat : MonoBehaviour {
-    private const float TICKDOWN_SCALE = 4f;
+    private const float TICKDOWN_SCALE = 1f;
     public Health health;
     // Start is called before the first frame update
     void Start() {

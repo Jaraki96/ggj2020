@@ -7,7 +7,7 @@ public class KeyState : MonoBehaviour {
     private const float TIMEOUT = 3f;
     private const int NUM_PRESSES = 5;
     private const float PRESSED_PROBABILITY = 0.75f;
-    private const float HEALING_SCALE = 2f;
+    private const float HEALING_SCALE = 3f;
     [System.Serializable]
     public class KeyEvent {
         public KeyManager.KeyLocation keyLocation;
@@ -38,7 +38,7 @@ public class KeyState : MonoBehaviour {
         pressedKeyString = "";
         for(int i = 0; i < pressedKeys.Count; ++i) {
             KeyEvent keyEvent = pressedKeys[i];
-            pressedKeyString = keyEvent.keyLocation.keyCode + ", ";
+            pressedKeyString += keyEvent.keyLocation.keyCode + ", ";
             if (Input.GetKey(keyEvent.keyLocation.keyCode)) {
                 keyEvent.lifetime -= time;
                 GameManager.instance.boat.health.TakeDamage(-time / HEALING_SCALE);
@@ -88,10 +88,8 @@ public class KeyState : MonoBehaviour {
                 // remove from KeyManager
                 KeyManager.instance.RemoveKey(keyEvent.keyLocation.keyCode);
             }
-        }
-    }
 
-    private void LateUpdate() {
+        }
         // remove all dead key events
         pressedKeys.RemoveAll(keyEvent => keyEvent.lifetime <= 0 || keyEvent.timeout <= 0);
         repeatKeys.RemoveAll(keyEvent => keyEvent.lifetime <= 0 || keyEvent.timeout <= 0);

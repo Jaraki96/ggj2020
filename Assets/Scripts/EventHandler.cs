@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class EventHandler : MonoBehaviour {
-    private const int EVENT_TIMING = 5;
+    private const int EVENT_TIMING = 3;
     public float timeSinceLastEvent = 0;
     // Start is called before the first frame update
     void Start() {

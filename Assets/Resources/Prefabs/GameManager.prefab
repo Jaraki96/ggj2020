@@ -809,7 +809,7 @@ MonoBehaviour:
   player2: {fileID: 6016630331797059271}
   boat: {fileID: 6016630331042864183}
   gameOverText: {fileID: 4687547776785218513}
-  timeLimit: 40
+  timeLimit: 30
   timer: 0
 --- !u!1001 &4007895148378471005
 PrefabInstance:

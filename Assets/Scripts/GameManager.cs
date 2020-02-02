@@ -18,7 +18,7 @@ public class GameManager : MonoBehaviour {
     [SerializeField]
     public Boat boat;
     public Text gameOverText;
-    public float timeLimit = 40;
+    public float timeLimit = 30;
     public float timer;
     
     // Start is called before the first frame update
