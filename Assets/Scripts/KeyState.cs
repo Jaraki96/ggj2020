@@ -38,7 +38,7 @@ public class KeyState : MonoBehaviour {
         pressedKeyString = "";
         for(int i = 0; i < pressedKeys.Count; ++i) {
             KeyEvent keyEvent = pressedKeys[i];
-            pressedKeyString += KeyManager.KeyCodeToString(keyEvent.keyLocation.keyCode) + ", ";
+            pressedKeyString += KeyManager.KeyCodeToString(keyEvent.keyLocation.keyCode);
             if (Input.GetKey(keyEvent.keyLocation.keyCode)) {
                 keyEvent.lifetime -= time;
                 GameManager.instance.boat.health.TakeDamage(-time / HEALING_SCALE);
@@ -58,7 +58,7 @@ public class KeyState : MonoBehaviour {
         }
         for (int i = 0; i < repeatKeys.Count; ++i) {
             KeyEvent keyEvent = repeatKeys[i];
-            repeatKeyString += KeyManager.KeyCodeToString(keyEvent.keyLocation.keyCode) + ", ";
+            repeatKeyString += KeyManager.KeyCodeToString(keyEvent.keyLocation.keyCode);
             if (Input.GetKeyDown(keyEvent.keyLocation.keyCode)) {
                 keyEvent.lifetime -= 1;
                 GameManager.instance.boat.health.TakeDamage(1f / HEALING_SCALE);
@@ -134,7 +134,7 @@ public class KeyState : MonoBehaviour {
             }
             float probability = Random.Range(0f, 1f);
             KeyManager.Quadrant quadrant = KeyManager.Quadrant.BOTTOM_RIGHT;
-            if(topLeftCount <= topRightCount && topLeftCount <= bottomLeftCount && topLeftCount <= bottomRightCount) {
+            if (topLeftCount <= topRightCount && topLeftCount <= bottomLeftCount && topLeftCount <= bottomRightCount) {
                 // spawn in top left
                 quadrant = KeyManager.Quadrant.TOP_LEFT;
             } else if (topRightCount <= topLeftCount && topRightCount <= bottomLeftCount && topRightCount <= bottomRightCount) {
@@ -146,10 +146,14 @@ public class KeyState : MonoBehaviour {
             } else {
                 // spawn in bottom right
             }
-            if (probability <= PRESSED_PROBABILITY) {
-                AddPressedKeyEvent(KeyManager.instance.GetRandomKeyByQuadrant(quadrant), HOLD_TIME, TIMEOUT);
-            } else {
+            if (pressedKeys.Count == 3) {
                 AddRepeatKeyEvent(KeyManager.instance.GetRandomKeyByQuadrant(quadrant), NUM_PRESSES, TIMEOUT);
+            } else {
+                if (probability <= PRESSED_PROBABILITY) {
+                    AddPressedKeyEvent(KeyManager.instance.GetRandomKeyByQuadrant(quadrant), HOLD_TIME, TIMEOUT);
+                } else {
+                    AddRepeatKeyEvent(KeyManager.instance.GetRandomKeyByQuadrant(quadrant), NUM_PRESSES, TIMEOUT);
+                }
             }
         }
     }
