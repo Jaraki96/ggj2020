@@ -22,6 +22,8 @@ public class GameManager : MonoBehaviour {
     public GameObject background;
     public Button playAgainButton;
     public Button mainMenuButton;
+    public GameObject player1UI;
+    public GameObject player2UI;
     public float timeLimit = 30;
     public float timer;
     public bool soundPlayed = false;
@@ -49,6 +51,8 @@ public class GameManager : MonoBehaviour {
             gameOverBackground.enabled = true;
             playAgainButton.gameObject.SetActive(true);
             mainMenuButton.gameObject.SetActive(true);
+            player1UI.SetActive(false);
+            player2UI.SetActive(false);
             // game is over
             Time.timeScale = 0;
             if(state == State.WIN) {

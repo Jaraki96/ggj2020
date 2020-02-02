@@ -121,6 +121,12 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &237875227 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6016630331726546526, guid: cf17f758bdc39bb4394f805d9faae140,
+    type: 3}
+  m_PrefabInstance: {fileID: 6016630332511361701}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &283379453
 GameObject:
   m_ObjectHideFlags: 0
@@ -385,6 +391,12 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 50, y: -30, z: 0}
+--- !u!1 &1409789708 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6016630330911005647, guid: cf17f758bdc39bb4394f805d9faae140,
+    type: 3}
+  m_PrefabInstance: {fileID: 6016630332511361701}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1422797090
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -776,7 +788,7 @@ PrefabInstance:
     - target: {fileID: 1251448968615712455, guid: cf17f758bdc39bb4394f805d9faae140,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1517562302792774800, guid: cf17f758bdc39bb4394f805d9faae140,
         type: 3}
@@ -913,6 +925,16 @@ PrefabInstance:
       propertyPath: background
       value: 
       objectReference: {fileID: 283379453}
+    - target: {fileID: 6016630332590785419, guid: cf17f758bdc39bb4394f805d9faae140,
+        type: 3}
+      propertyPath: player1UI
+      value: 
+      objectReference: {fileID: 1409789708}
+    - target: {fileID: 6016630332590785419, guid: cf17f758bdc39bb4394f805d9faae140,
+        type: 3}
+      propertyPath: player2UI
+      value: 
+      objectReference: {fileID: 237875227}
     - target: {fileID: 7577559234220531449, guid: cf17f758bdc39bb4394f805d9faae140,
         type: 3}
       propertyPath: m_FontData.m_HorizontalOverflow
