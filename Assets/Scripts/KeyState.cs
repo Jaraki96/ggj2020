@@ -38,7 +38,7 @@ public class KeyState : MonoBehaviour {
         pressedKeyString = "";
         for(int i = 0; i < pressedKeys.Count; ++i) {
             KeyEvent keyEvent = pressedKeys[i];
-            pressedKeyString += keyEvent.keyLocation.keyCode + ", ";
+            pressedKeyString += KeyManager.KeyCodeToString(keyEvent.keyLocation.keyCode) + ", ";
             if (Input.GetKey(keyEvent.keyLocation.keyCode)) {
                 keyEvent.lifetime -= time;
                 GameManager.instance.boat.health.TakeDamage(-time / HEALING_SCALE);
@@ -58,7 +58,7 @@ public class KeyState : MonoBehaviour {
         }
         for (int i = 0; i < repeatKeys.Count; ++i) {
             KeyEvent keyEvent = repeatKeys[i];
-            repeatKeyString += keyEvent.keyLocation.keyCode + ", ";
+            repeatKeyString += KeyManager.KeyCodeToString(keyEvent.keyLocation.keyCode) + ", ";
             if (Input.GetKeyDown(keyEvent.keyLocation.keyCode)) {
                 keyEvent.lifetime -= 1;
                 GameManager.instance.boat.health.TakeDamage(1f / HEALING_SCALE);

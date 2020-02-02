@@ -47,7 +47,7 @@ public class KeyManager : MonoBehaviour {
         KeyCode.J,
         KeyCode.K,
         KeyCode.L,
-        KeyCode.Colon,
+        KeyCode.Semicolon,
         KeyCode.Z,
         KeyCode.X,
         KeyCode.C,
@@ -57,7 +57,7 @@ public class KeyManager : MonoBehaviour {
         KeyCode.M,
         KeyCode.Comma,
         KeyCode.Period,
-        KeyCode.Question,
+        KeyCode.Slash,
     };
     [SerializeField]
     public struct Location {
@@ -196,6 +196,20 @@ public class KeyManager : MonoBehaviour {
 
     public void RemoveKey(KeyCode keyCode) {
         selectedKeys.Remove(keyCode);
+    }
+
+    public static string KeyCodeToString(KeyCode keyCode) {
+        switch (keyCode) {
+            case KeyCode.Semicolon:
+                return ";";
+            case KeyCode.Period:
+                return ".";
+            case KeyCode.Slash:
+                return "/";
+            case KeyCode.Comma:
+                return ",";
+        }
+        return keyCode.ToString().Replace("Alpha", "");
     }
 
     // Update is called once per frame
