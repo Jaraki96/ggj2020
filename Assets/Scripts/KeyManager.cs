@@ -16,8 +16,8 @@ public class KeyManager : MonoBehaviour {
         BOTTOM_LEFT,
         BOTTOM_RIGHT
     }
-    [SerializeField]
-    public KeyCode[] keyCodes = {
+
+    readonly KeyCode[] keyCodes = {
         KeyCode.Alpha1,
         KeyCode.Alpha2,
         KeyCode.Alpha3,
