@@ -20,4 +20,8 @@ public class LevelManager : MonoBehaviour
         Time.timeScale = 1;
         SceneManager.LoadScene(name);
     }
+
+    public void Quit() {
+        Application.Quit();
+    }
 }

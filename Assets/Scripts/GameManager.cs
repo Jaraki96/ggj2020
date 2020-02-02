@@ -37,6 +37,9 @@ public class GameManager : MonoBehaviour {
 
     // Update is called once per frame
     void Update() {
+        if (Input.GetKeyDown(KeyCode.Escape)) {
+            Application.Quit();
+        }
         background.transform.position = new Vector3(37.5f - 75f * (timeLimit - timer) / timeLimit, 2, 2);
         AudioManager.instance.PlaySound("Waves");
         AudioManager.instance.PlaySound("Background");
