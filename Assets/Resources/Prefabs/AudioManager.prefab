@@ -59,7 +59,7 @@ MonoBehaviour:
     randomVolume: 0
     randomPitch: 0.1
   - name: Healing
-    clip: {fileID: 8300000, guid: 9b916931c2b23f444829a29c258bacc9, type: 3}
+    clip: {fileID: 8300000, guid: e6a37faf8ccf61841913309214c0edf6, type: 3}
     source: {fileID: 0}
     volume: 0.7
     pitch: 1
@@ -74,6 +74,20 @@ MonoBehaviour:
     randomPitch: 0.1
   - name: Waves
     clip: {fileID: 8300000, guid: d57ff6de9d0f8734ca5e6a4dbff8d2aa, type: 3}
+    source: {fileID: 0}
+    volume: 0.7
+    pitch: 1
+    randomVolume: 0
+    randomPitch: 0
+  - name: Background
+    clip: {fileID: 8300000, guid: add65a41c4996674aa6f4e836c81f724, type: 3}
+    source: {fileID: 0}
+    volume: 0.7
+    pitch: 1
+    randomVolume: 0
+    randomPitch: 0
+  - name: Win
+    clip: {fileID: 8300000, guid: 6029cca222ee71c439282a69ce3ff46f, type: 3}
     source: {fileID: 0}
     volume: 0.7
     pitch: 1

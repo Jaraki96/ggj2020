@@ -57,7 +57,7 @@ public class KeyManager : MonoBehaviour {
         KeyCode.M,
         KeyCode.Comma,
         KeyCode.Period,
-        KeyCode.Slash,
+        KeyCode.Question,
     };
     [SerializeField]
     public struct Location {
@@ -201,13 +201,17 @@ public class KeyManager : MonoBehaviour {
     public static string KeyCodeToString(KeyCode keyCode) {
         switch (keyCode) {
             case KeyCode.Semicolon:
+            case KeyCode.Colon:
                 return ";";
             case KeyCode.Period:
-                return ".";
+            case KeyCode.Greater:
+                return ">";
             case KeyCode.Slash:
-                return "/";
+            case KeyCode.Question:
+                return "?";
             case KeyCode.Comma:
-                return ",";
+            case KeyCode.Less:
+                return "<";
         }
         return keyCode.ToString().Replace("Alpha", "");
     }
